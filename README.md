@@ -86,14 +86,29 @@ knocks and isolated resonant bursts in the same band, at −20 to +5 dB SNR,
 
 | Front end | ROC AUC | Balanced accuracy |
 |---|---|---|
-| from 5 Hz | **0.995 ± 0.002** | 0.960 ± 0.013 |
-| from 200 Hz (low band removed) | 0.989 ± 0.004 | 0.944 ± 0.011 |
+| from 5 Hz | **0.995 ± 0.002** | 0.960 ± 0.014 |
+| from 200 Hz (low band removed) | 0.989 ± 0.004 | 0.944 ± 0.012 |
+
+*± is the sample standard deviation over the 15 runs (5 folds × 3 seeds, 320
+test clips per fold, 1,600 clips in total). Per-run files are in
+`results/cv_fmin5/` and `results/cv_fmin200/`.*
 
 ![Ablation](figures/03_ablation.png)
 
 The low-frequency band is worth 0.006 AUC here. That number is a statement
 about the simulator's assumed infrasound amplitude, and it is exactly the
 assumption the zoo recordings replace.
+
+The two rows were run on the same seed × fold splits, so the gap can be read
+as fifteen paired differences rather than two error bars that overlap
+(`results/paired_checks.json`). Read that way it is small but not noise: the
+5 Hz front end wins on **15 of 15** pairs by **+0.0063 ± 0.0025** AUC (95 %
+CI ±0.0013, worst pair +0.0018), and on 14 of 15 pairs in balanced accuracy
+(+0.015 ± 0.011; the one exception goes the other way by 0.006). In clips,
+that is about 13 errors per 320-clip fold with the low band against 18
+without — the band removes one error in four *on this simulator*. The zoo
+recordings decide whether the real infrasound component is large enough to
+keep that.
 
 The figure that matters for a real installation is not accuracy but the
 operating curve, because an alarm that cries wolf is switched off within a
@@ -113,6 +128,25 @@ point of the second stage. With the classifier:
 | 0.5 | 28 % |
 
 The binding constraint is the alarm rate, not the classifier.
+
+**The table stops where the numbers stop being trustworthy.** The stream is
+12 hours long, so one false alarm is 0.083 per hour and the low end of the
+curve moves in steps of that size: the 28 % at 0.5 per hour rests on six
+false alarms and 31 of 111 bouts. Pushed further down
+(`results/paired_checks.json`):
+
+| Tolerance | Bouts detected |
+|---|---|
+| one false alarm a night (8 h, 0.125 / h — two in this stream) | 7 % (8 of 111) |
+| none in 12 h | 4.5 % (5 of 111) |
+| 90 % of bouts | needs 3.3 false alarms / h |
+| 95 % of bouts | needs 6.5 false alarms / h |
+
+At the alarm rate a keeper would actually tolerate, this classifier catches
+one approach in fourteen. Twelve simulated hours cannot resolve anything
+below that, and a real installation would be judged on weeks. The number
+that has to move is the false-alarm rate at fixed recall, and on the
+simulator it is 3–7 an hour for a detector that is meant to be believed.
 
 ## The study at Emirates Park Zoo
 
@@ -281,6 +315,10 @@ The physics is public in this repository:
   the exact field reduces to the free field without an interface and
   satisfies both interface conditions, and the network's result is what
   the page says it is
+- `tests/test_results.py` — five checks that pin every simulator number
+  on this page (the two front-end rows, the paired low-band gain, the
+  trigger's 97 % / 57 per hour, the operating table and its ends) to the
+  per-run files in `results/`
 
 The detection pipeline (synthetic hippo-call generator, the classifier,
 the stream evaluation and the lead-time sizing) is held in a private
@@ -289,6 +327,7 @@ repository while the zoo recordings are analysed.
 ```
 pip install -r requirements.txt
 python tests/test_interface.py
+python -m pytest tests/test_results.py
 python src/interface_pinn.py      # exact curves in seconds; the network ~30 min on a laptop CPU
 ```
 
