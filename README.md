@@ -21,6 +21,10 @@
 
 ---
 
+## Why this exists
+
+Mining companies working in Africa came to me with a problem nobody had solved. Their people work on rivers and dams that hippos treat as their own, and a submerged hippo is the most dangerous animal on the water precisely because you cannot see it. So I asked a different question: what if you could hear it? The physics says yes, but only from below the surface. That insight is the core of this repository, and it is now being tested on live animals at a zoo in Abu Dhabi.
+
 ## Background
 
 Hippopotamus attacks kill around 500 people a year in Africa.
