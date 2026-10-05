@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-10-05
+
+- **The water column is a waveguide** (new README section "A shallow pool
+  does not carry the low band", `src/waveguide_cutoff.py`,
+  `results/waveguide_cutoff.json`, `tests/test_waveguide.py`, 6 tests). The
+  range budget spread every frequency alike. With a rigid floor the first
+  mode cuts on at c/4H: 185 Hz in 2 m of water, 123 Hz in 3 m; over
+  saturated sand 376 and 251 Hz. Below cut-off the exact field (normal-mode
+  sum, checked against an image-source series to better than 1e-6) falls
+  4.2 dB/m at 50 Hz in 3 m of water: 35 dB under the budget at 10 m, 118 dB
+  at 30 m.
+- **Qualified:** the low band (the 5 Hz front end, the hydrophone flat below
+  10 Hz) is a short-range signal, about two water depths; the range curve
+  holds for the part of the call above cut-off, where the ideal guide is 4
+  to 5 dB kinder than the spreading law at 205 Hz.
+- Not shown: an elastic floor can carry what the water cannot; only the
+  cut-off is given for the sand bottom.
+- Housekeeping in the same commit: eight macOS `._*` files removed and
+  ignored.
+
 ## 2026-09-17
 
 - Low-band ablation read as 15 paired seed×fold differences: the 5 Hz

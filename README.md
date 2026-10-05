@@ -183,6 +183,10 @@ level has ever been published for *Hippopotamus amphibius*:
 
 ![Detection range](figures/02_detection_range.png)
 
+The water curve spreads every frequency alike. Below the cut-off of the
+water column that is wrong by tens of decibels; see
+[A shallow pool does not carry the low band](#a-shallow-pool-does-not-carry-the-low-band).
+
 ## A shallow source is not 35 dB down
 
 ![shallow source](figures/06_shallow_source.png)
@@ -275,6 +279,81 @@ network solves. The 35.5 dB and the table above it are for a point source.
 The two geometries differ in their deep limit by one decibel (34.4 versus
 35.5 dB) and agree on the shape of the shallow-source curve.
 
+## A shallow pool does not carry the low band
+
+The range curve above treats the water as open. `src/propagation.py` spreads
+the hydrophone's signal spherically out to one water depth and cylindrically
+beyond it, the same at every frequency. Water two or three metres deep under
+a free surface is a waveguide, and a waveguide has a lowest frequency it will
+carry. This check was added on 5 October 2026 (`src/waveguide_cutoff.py`,
+`results/waveguide_cutoff.json`).
+
+With a pressure-release surface and a perfectly rigid floor, the first mode
+cuts on at c / 4H. No real floor is rigid, and a softer one raises the
+cut-off. Over a fluid bottom of sound speed c_b it is
+c / (4H √(1 − c²/c_b²)), the Pekeris result.
+
+| Water depth | Cut-off, rigid floor | Cut-off, saturated sand (1,700 m/s) |
+|---|---|---|
+| 1 m | 370 Hz | 752 Hz |
+| 1.5 m | 247 Hz | 501 Hz |
+| 2 m | 185 Hz | 376 Hz |
+| 3 m | 123 Hz | 251 Hz |
+| 5 m | 74 Hz | 150 Hz |
+
+Below cut-off nothing propagates. Over a rigid floor the field is then a sum
+of evanescent modes, and it can be written down exactly. Transmission loss
+re 1 m, with source and hydrophone both at mid-depth in 3 m of water (the
+depth the range figure assumes):
+
+| Range | 3 m | 5 m | 10 m | 30 m |
+|---|---|---|---|---|
+| spreading law used for the range figure | 9.5 dB | 11.8 dB | 14.8 dB | 19.5 dB |
+| exact, 20 Hz | 17.3 | 28.5 | 53.8 | 148.2 |
+| exact, 50 Hz | 16.0 | 26.5 | 50.1 | 137.9 |
+| exact, 100 Hz | 9.9 | 17.3 | 33.4 | 91.2 |
+| exact, 205 Hz (above cut-off) | 5.0 | 7.0 | 10.0 | 14.8 |
+
+**Ten metres from the animal, the 50 Hz component arrives 35 dB below what
+the range budget assumes, and at thirty metres 118 dB below, which is to say
+not at all.** Below cut-off the level falls by a fixed number of decibels per
+metre: 4.2 dB/m at 50 Hz in 3 m of water, 6.6 dB/m in 2 m, and in the
+low-frequency limit 13.6 dB for every water depth of range, whatever the
+depth. The exact level is 10 dB under the spreading law by 3.9 m (50 Hz, 3 m
+of water) and 20 dB under it by 6.3 m; in 2 m of water by 2.4 m and 3.9 m.
+That is about two water depths in both cases.
+
+Three things on this page change.
+
+- **The low band is a short-range signal.** A hydrophone that is flat below
+  10 Hz still only receives the low-frequency component of a submerged call
+  within about two water depths of the animal. The classifier ablation
+  above, a front end from 5 Hz against one from 200 Hz, is about a band that
+  in 2 m of water lies almost entirely below the 185 Hz cut-off. The
+  simulator's assumed amplitude for that band does not depend on distance.
+  In the water column it would, steeply.
+- **The range curve is for the part of the call above cut-off.** Over a
+  rigid floor in 3 m of water that includes the 205 Hz peak of the roar,
+  where the ideal guide is 4 to 5 dB kinder than the spreading law. Over
+  sand the cut-off is 251 Hz and the peak is below it.
+- **The sensor argument splits by frequency.** The interface sections give
+  the hydrophone 10 to 35 dB more signal than the bank microphone. For the
+  low band that holds next to the animal and is spent within a few metres
+  of water.
+
+**What this does not show.** The rigid floor is the kindest case for the
+water column, and the only one computed exactly here. For the sand bottom
+only the cut-off is given: below it the field leaks into the bottom and has
+no single decay rate. A real floor, concrete on soil or river sediment, is
+elastic, and energy the water cannot carry can travel in the ground. So this
+says the water column does not deliver the low band to a distant hydrophone.
+It does not say the low band cannot be detected, and a sensor on or in the
+floor may be the right one for it. The level of the low band against
+distance from the animal, in a pool whose depth and floor are known, is the
+measurement that settles it. The modal sum is checked against an independent
+image-source series (agreement to better than 1e-6) and against both
+boundary conditions in `tests/test_waveguide.py`.
+
 ## Caveats
 
 - The hippo's roar is not infrasonic. The surface call peaks at 205 ± 188 Hz
@@ -317,6 +396,13 @@ was small every time. The exact curves run in seconds; the network takes about
 were added so the simulator numbers here can be checked against the JSON
 rather than against my memory.
 
+On 5 October 2026 I checked the one assumption the range budget had never
+been asked about: that the water carries every frequency alike. It does not.
+Three metres of water over a rigid floor cut off at 123 Hz, and below that
+the 50 Hz component is 35 dB under the budget at ten metres. The low band is
+still on the page, but as something a hydrophone sees within a couple of
+water depths of the animal.
+
 ## Sources
 
 Barklow, W. E. (2004). *Amphibious communication with sound in hippos,
@@ -344,6 +430,11 @@ The physics is public in this repository:
   the exact field reduces to the free field without an interface and
   satisfies both interface conditions, and the network's result is what
   the page says it is
+- `src/waveguide_cutoff.py` — cut-off frequencies of a shallow water
+  column and the exact field below cut-off, as a normal-mode sum
+- `tests/test_waveguide.py` — six checks: the cut-off table, the modal sum
+  against an image-source series and against both boundary conditions, the
+  transmission-loss table, the decay rates and the ranges quoted above
 - `tests/test_results.py` — five checks that pin every simulator number
   on this page (the two front-end rows, the paired low-band gain, the
   trigger's 97 % / 57 per hour, the operating table and its ends) to the
@@ -356,7 +447,8 @@ repository while the zoo recordings are analysed.
 ```
 pip install -r requirements.txt
 python tests/test_interface.py
-python -m pytest tests/test_results.py
+python -m pytest tests/test_results.py tests/test_waveguide.py
+python src/waveguide_cutoff.py    # the waveguide tables, in seconds
 python src/interface_pinn.py      # exact curves in seconds; the network ~30 min on a laptop CPU
 ```
 
