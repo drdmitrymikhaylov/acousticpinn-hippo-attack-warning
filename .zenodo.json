@@ -1,0 +1,21 @@
+{
+  "upload_type": "software",
+  "title": "AcousticPINN: Underwater Hippopotamus Early-Warning System",
+  "description": "Hearing a hippo while it is still under water",
+  "creators": [
+    {
+      "name": "Mikhaylov, Dmitry",
+      "orcid": "0009-0009-2108-6820",
+      "affiliation": "Abu Dhabi Maritime Academy, AD Ports Group"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "keywords": [
+    "acoustic monitoring",
+    "bioacoustics",
+    "early warning system",
+    "hydrophone",
+    "wildlife conservation"
+  ],
+  "access_right": "open"
+}
