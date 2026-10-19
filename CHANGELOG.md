@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-19
+
+- LICENSE now holds the standard MIT text and LICENSE-CONTENT the standard CC BY 4.0 text, so GitHub recognises the licence (it showed "Other" before). The terms are unchanged; the note on what each licence covers moved to `NOTICE.md`.
+
 ## 2026-10-05
 
 - **The water column is a waveguide** (new README section "A shallow pool
