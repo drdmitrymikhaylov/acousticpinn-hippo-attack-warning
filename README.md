@@ -1,5 +1,7 @@
 # Hippo acoustic warning
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23529534.svg)](https://doi.org/10.5281/zenodo.23529534)
+
 **Detecting a hippopotamus while it is still under water, so that a person on the bank gets a warning before there is anything to hear.**
 
 *Acoustic recording under way at a zoo in Abu Dhabi.*
