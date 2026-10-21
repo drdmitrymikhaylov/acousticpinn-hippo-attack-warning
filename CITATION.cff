@@ -2,6 +2,7 @@ cff-version: 1.2.0
 message: "If you use this repository, please cite it as below."
 type: software
 title: "AcousticPINN: Underwater Hippopotamus Early-Warning System"
+doi: "10.5281/zenodo.23529534"
 abstract: "Hearing a hippo while it is still under water"
 authors:
   - family-names: Mikhaylov
