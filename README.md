@@ -2,6 +2,10 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23529534.svg)](https://doi.org/10.5281/zenodo.23529534)
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/drdmitrymikhaylov/acousticpinn-hippo-attack-warning/blob/main/notebooks/quickstart.ipynb)
+
+**Try it in five minutes:** [`notebooks/quickstart.ipynb`](notebooks/quickstart.ipynb) runs the interface loss and the shallow-water cut-off from the public code in `src/`, in Colab or locally, with no data download.
+
 **Detecting a hippopotamus while it is still under water, so that a person on the bank gets a warning before there is anything to hear.**
 
 *Acoustic recording under way at a zoo in Abu Dhabi.*
